@@ -1,0 +1,11 @@
+server:
+  ip: 192.168.188.123:8000
+
+datasource:
+  host: 127.0.0.1
+  port: 3306
+  dbname: blog
+  user: min
+  pass: 123
+  charset: utf8mb4
+  loc: Asia/Shanghai
