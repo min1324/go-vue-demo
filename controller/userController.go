@@ -24,8 +24,12 @@ func Register(ctx *gin.Context) {
 		registerUser.Name = common.RandomString(10)
 	}
 	db.Create(&registerUser)
-
-	SuccessMsg(ctx, "register success.")
+	token, err := common.CreateToken(&registerUser)
+	if err != nil {
+		ResponeMsg(ctx, 522, "create token failed")
+		return
+	}
+	Success(ctx, gin.H{"token": token}, "register success.")
 }
 
 func Login(ctx *gin.Context) {
