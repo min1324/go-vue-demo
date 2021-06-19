@@ -1,5 +1,10 @@
 server:
-  ip: 192.168.188.123:8000
+  # server ip
+  ip: 192.168.188.123:9000
+  # upload dir
+  dir: upload 
+  # load dist assets
+  assets: true
 
 datasource:
   host: 127.0.0.1

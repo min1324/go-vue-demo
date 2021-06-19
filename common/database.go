@@ -1,15 +1,12 @@
 package common
 
 import (
+	"demo/model"
 	"fmt"
 	"net/url"
 
-	"github.com/spf13/viper"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-
-	"demo/model"
 )
 
 var DB *gorm.DB
@@ -20,13 +17,13 @@ func GetDB() *gorm.DB {
 
 func InitDB() *gorm.DB {
 
-	user := viper.GetString("datasource.user")
-	pass := viper.GetString("datasource.pass")
-	host := viper.GetString("datasource.host")
-	port := viper.GetString("datasource.port")
-	dbname := viper.GetString("datasource.dbname")
-	charset := viper.GetString("datasource.charset")
-	loc := viper.GetString("datasource.loc")
+	user := GbConfig.GetString("datasource.user")
+	pass := GbConfig.GetString("datasource.pass")
+	host := GbConfig.GetString("datasource.host")
+	port := GbConfig.GetString("datasource.port")
+	dbname := GbConfig.GetString("datasource.dbname")
+	charset := GbConfig.GetString("datasource.charset")
+	loc := GbConfig.GetString("datasource.loc")
 
 	//dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
 	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=True&loc=%s",

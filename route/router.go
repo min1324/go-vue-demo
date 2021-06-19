@@ -1,16 +1,18 @@
 package route
 
 import (
+	"demo/common"
 	"demo/controller"
-	"demo/dist"
+	"demo/frontend"
 	"demo/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 func CollectRoute(r *gin.Engine) *gin.Engine {
-	dist.InitGinRouter(r)
-
+	if common.GbConfig.GetBool("server.assets") {
+		frontend.InitGinRouter(r)
+	}
 	r.Use(middleware.CorsMiddleWare(), middleware.RecoverMiddleware())
 
 	userRoutes := r.Group("auth")
@@ -33,6 +35,9 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	postRoutes.DELETE("/:id", postContoller.Delete)
 	postRoutes.GET("/:id", postContoller.Show)
 	postRoutes.GET("page/list", postContoller.PageList)
+
+	fileRoutes := r.Group("/file")
+	fileRoutes.POST("/upload", controller.Upload)
 
 	return r
 }

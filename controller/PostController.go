@@ -3,7 +3,6 @@ package controller
 import (
 	"demo/common"
 	"demo/model"
-	"demo/respone"
 	"demo/validator"
 	"log"
 	"strconv"
@@ -33,7 +32,7 @@ func (p *PostController) Create(ctx *gin.Context) {
 	// 数据验证
 	err := ctx.ShouldBind(&requestPost)
 	if err != nil {
-		respone.Fail(ctx, nil, "数据验证错误")
+		FailureMsg(ctx, "数据验证错误")
 		panic(err)
 	}
 	// 获取登陆用户
@@ -50,17 +49,17 @@ func (p *PostController) Create(ctx *gin.Context) {
 	// 插入数据
 
 	if err := p.DB.Create(&post).Error; err != nil {
-		respone.Fail(ctx, nil, "创建失败")
+		FailureMsg(ctx, "创建失败")
 		return
 	}
-	respone.Success(ctx, nil, "创建成功")
+	SuccessMsg(ctx, "创建成功")
 }
 
 func (p *PostController) Update(ctx *gin.Context) {
 	var requestPost model.Post
 	err := ctx.ShouldBind(&requestPost)
 	if err != nil {
-		respone.Fail(ctx, nil, "数据验证错误，分类名称必填")
+		FailureMsg(ctx, "数据验证错误，分类名称必填")
 		return
 	}
 
@@ -68,7 +67,7 @@ func (p *PostController) Update(ctx *gin.Context) {
 	postId := ctx.Params.ByName("id")
 	var post model.Post
 	if p.DB.Where("id=?", postId).First(&post).Error == gorm.ErrRecordNotFound {
-		respone.Fail(ctx, nil, "文章不存在.")
+		FailureMsg(ctx, "文章不存在.")
 		return
 	}
 	// 判断当前用户是否为文章的作者
@@ -77,17 +76,17 @@ func (p *PostController) Update(ctx *gin.Context) {
 	user, _ := ctx.Get("user")
 	userId := user.(model.User).ID
 	if userId != post.UserId {
-		respone.Fail(ctx, nil, "文字不是你的，请勿修改")
+		FailureMsg(ctx, "文字不是你的，请勿修改")
 		return
 	}
 	log.Println(post, requestPost)
 	tx := p.DB.Model(&post).Updates(requestPost)
 	err = tx.Error
 	if err != nil {
-		respone.Fail(ctx, nil, "更新失败")
+		FailureMsg(ctx, "更新失败")
 		return
 	}
-	respone.Success(ctx, gin.H{"post": post}, "更新成功")
+	Success(ctx, gin.H{"post": post}, "更新成功")
 
 }
 
@@ -96,17 +95,17 @@ func (p *PostController) Show(ctx *gin.Context) {
 	postId := ctx.Params.ByName("id")
 	var post model.Post
 	if p.DB.Preload("Category").Where("id=?", postId).First(&post).Error == gorm.ErrRecordNotFound {
-		respone.Fail(ctx, nil, "文章不存在.")
+		FailureMsg(ctx, "文章不存在.")
 		return
 	}
-	respone.Success(ctx, gin.H{"post": post}, "成功")
+	Success(ctx, gin.H{"post": post}, "成功")
 }
 
 func (p *PostController) Delete(ctx *gin.Context) {
 	var requestPost validator.CreatePostRequest
 	err := ctx.ShouldBind(&requestPost)
 	if err != nil {
-		respone.Fail(ctx, nil, "数据验证错误，分类名称必填")
+		FailureMsg(ctx, "数据验证错误，分类名称必填")
 		return
 	}
 
@@ -114,7 +113,7 @@ func (p *PostController) Delete(ctx *gin.Context) {
 	postId := ctx.Params.ByName("id")
 	var post model.Post
 	if p.DB.Where("id=?", postId).First(&post).Error == gorm.ErrRecordNotFound {
-		respone.Fail(ctx, nil, "文章不存在.")
+		FailureMsg(ctx, "文章不存在.")
 		return
 	}
 	// 判断当前用户是否为文章的作者
@@ -123,14 +122,14 @@ func (p *PostController) Delete(ctx *gin.Context) {
 	user, _ := ctx.Get("user")
 	userId := user.(model.User).ID
 	if userId != post.UserId {
-		respone.Fail(ctx, nil, "文字不是你的，请勿修改")
+		FailureMsg(ctx, "文字不是你的，请勿修改")
 		return
 	}
 	if err := p.DB.Model(&post).Delete(requestPost).Error; err != nil {
-		respone.Fail(ctx, nil, "删除失败")
+		FailureMsg(ctx, "删除失败")
 		return
 	}
-	respone.Success(ctx, nil, "成功")
+	SuccessMsg(ctx, "成功")
 }
 
 func (p PostController) PageList(ctx *gin.Context) {
@@ -146,5 +145,5 @@ func (p PostController) PageList(ctx *gin.Context) {
 	var total int64
 	p.DB.Model(&model.Post{}).Preload("Category").Count(&total)
 
-	respone.Success(ctx, gin.H{"data": posts, "total": total}, "success")
+	Success(ctx, gin.H{"data": posts, "total": total}, "success")
 }
