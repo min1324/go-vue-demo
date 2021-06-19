@@ -6,8 +6,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+// GbConfig global config
 var GbConfig = viper.New()
 
+// InitConfig initialize global config
 func InitConfig() {
 	workDir, _ := os.Getwd()
 

@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// RandomString return an n bit string
 func RandomString(n int) string {
 	var letters = []byte("asdfghjklqwertyuiopzxcvbnmASDFGHJKLZXCVBNMQWERTYUIOP")
 	result := make([]byte, n)
@@ -16,6 +17,7 @@ func RandomString(n int) string {
 	return string(result)
 }
 
+// MkDir create dir if not exists
 func MkDir(dir string) error {
 	_, err := os.Stat(dir)
 	if err != nil {
@@ -24,6 +26,7 @@ func MkDir(dir string) error {
 	return err
 }
 
+// MkDirAll create dir if not exists
 func MkDirAll(dir string) error {
 	_, err := os.Stat(dir)
 	if err != nil {

@@ -14,6 +14,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+// CreateToken create a user token
 func CreateToken(u *model.User) (string, error) {
 	expiresAt := time.Now().Add(24 * time.Hour * 3).Unix()
 	clains := &Claims{

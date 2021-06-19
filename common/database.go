@@ -9,12 +9,15 @@ import (
 	"gorm.io/gorm"
 )
 
+// DB global database
 var DB *gorm.DB
 
+// GetDB return global database
 func GetDB() *gorm.DB {
 	return DB
 }
 
+// InitDB initialize database
 func InitDB() *gorm.DB {
 
 	user := GbConfig.GetString("database.user")
