@@ -20,5 +20,10 @@ type UserToCln struct {
 }
 
 func ToUserDto(u User) UserToCln {
-	return UserToCln{Name: u.Name, Phone: u.Phone}
+	return UserToCln{
+		Name:      u.Name,
+		Phone:     u.Phone,
+		CreatedAt: Time(u.CreatedAt),
+		UpdatedAt: Time(u.UpdatedAt),
+	}
 }
