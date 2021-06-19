@@ -1,5 +1,6 @@
 server:
-  dns: 127.0.0.1:8000
+  dns: 127.0.0.1:8080
+  dir: upload
 
 database:
   host: 127.0.0.1

@@ -6,8 +6,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-// GbConfig global config
-var GbConfig = viper.New()
+var (
+	// GbConfig global config
+	GbConfig = viper.New()
+
+	UploadPath string
+)
 
 // InitConfig initialize global config
 func InitConfig() {
@@ -21,4 +25,9 @@ func InitConfig() {
 	if err != nil {
 		panic(err)
 	}
+	dir := GbConfig.GetString("server.dir")
+	if err = MkDirAll(dir); err != nil {
+		panic(err)
+	}
+	UploadPath = dir
 }

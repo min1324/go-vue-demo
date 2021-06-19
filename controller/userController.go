@@ -3,6 +3,7 @@ package controller
 import (
 	"demo/common"
 	"demo/model"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -60,6 +61,7 @@ func Login(ctx *gin.Context) {
 	var user model.User
 	db.Where("phone=?", loginUser.Phone).First(&user)
 	if user.ID == 0 {
+		fmt.Println(user, loginUser)
 		ResponeMsg(ctx, http.StatusUnprocessableEntity, "user not exists")
 		return
 	}
@@ -77,4 +79,9 @@ func Login(ctx *gin.Context) {
 	}
 
 	Success(ctx, gin.H{"token": token}, "login success.")
+}
+
+func Info(ctx *gin.Context) {
+	user, _ := ctx.Get("user")
+	Respone(ctx, http.StatusOK, 200, gin.H{"user": model.ToUserDto(user.(model.User))}, "user info.")
 }
