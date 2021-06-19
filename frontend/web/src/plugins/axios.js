@@ -1,57 +1,41 @@
-import Vue from 'vue';
 import axios from 'axios';
+import storageService from '../service/storageService';
 
-// Full config:  https://github.com/axios/axios#request-config
-// axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+const url = window.index.url ? window.index.url : 'http://127.0.0.1:8000';
 
-const config = {
-  // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  // timeout: 60 * 1000, // Timeout
-  // withCredentials: true, // Check cross-site Access-Control
-};
+const service = axios.create({
+  // baseURL: glob.url,
+  baseURL: url,
+  timeout: 1000 * 5,
+});
 
-const _axios = axios.create(config);
+// Add a request interceptor
+service.interceptors.request.use((config) => {
+  // Do something before request is sent
 
-_axios.interceptors.request.use(
-  (config) =>
-    // Do something before request is sent
-    config,
-  (error) =>
-    // Do something with request error
-    Promise.reject(error)
-  ,
-);
+  Object.assign(config.headers, { Authorization: `Bearer ${storageService.get(storageService.USER_TOKEN)}` });
+  return config;
+}, (error) => {
+  // Do something with request error
+  Promise.reject(error);
+});
 
-// Add a response interceptor
-_axios.interceptors.response.use(
-  (response) =>
-    // Do something with response data
-    response,
-  (error) =>
-    // Do something with response error
-    Promise.reject(error)
-  ,
-);
+// 添加响应拦截器
+service.interceptors.response.use((response) => {
+  // 2xx 范围内的状态码都会触发该函数。
+  // 对响应数据做点什么
+  return response;
+}, ((error) => {
+  if (error.response) {
+    // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
+  } else if (error.request) {
+    // 请求已经成功发起，但没有收到响应
+    // `error.request` 在浏览器中是 XMLHttpRequest 的实例，
+    // 而在node.js中是 http.ClientRequest 的实例
+  } else {
+    // 发送请求时出了点问题
+  }
+  return Promise.reject(error);
+}));
 
-Plugin.install = function (Vue, options) {
-  Vue.axios = _axios;
-  window.axios = _axios;
-  Object.defineProperties(Vue.prototype, {
-    axios: {
-      get() {
-        return _axios;
-      },
-    },
-    $axios: {
-      get() {
-        return _axios;
-      },
-    },
-  });
-};
-
-Vue.use(Plugin);
-
-export default Plugin;
+export default service;

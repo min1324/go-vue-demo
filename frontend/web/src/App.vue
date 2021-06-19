@@ -1,9 +1,6 @@
 <template>
 
-  <v-app
-    class="overflow-hidden"
-    id="top"
-  >
+  <v-app id="top">
     <img id="bgImg">
 
     <!-- app bar -->
@@ -17,7 +14,7 @@
       <v-app-bar-nav-icon @click="onDrawer()"></v-app-bar-nav-icon>
 
       <v-toolbar-title @click="$router.push({name:'Home'})">
-        <div color="primary">{{title}}</div>
+        <div color="primary">{{navbarTitle}}</div>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -106,7 +103,7 @@
     >
       <v-img
         :aspect-ratio="16/9"
-        :src="navBG"
+        :src="user.bg"
       >
         <v-row
           align="end"
@@ -166,13 +163,16 @@
     <!-- main -->
 
     <v-main>
+
       <v-container style="my-10">
         <!-- using vue-router -->
-        <router-view :key="$route.path"></router-view>
+        <div>
+          <router-view :key="$route.path"></router-view>
+        </div>
+        <div style="mt-10">
+          <Footer />
+        </div>
       </v-container>
-      <div style="mt-10">
-        <foot />
-      </div>
 
     </v-main>
     <!-- main end -->
@@ -184,31 +184,30 @@
       dark
       fixed
       color="purple"
-      v-if="scrollBtn"
+      v-if="scrollTotopBtn"
       href="#top"
     >
       <v-icon dark>mdi-android</v-icon>
     </v-btn>
+
   </v-app>
 
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import foot from '@/components/Footer.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
   name: 'App',
   data: () => ({
-    scrollInvoked: 0,
-    scrollBtn: true,
+    scrollTotopBtn: true,
     user: {
       name: '',
       img: 'https://randomuser.me/api/portraits/men/85.jpg',
-      // img: 'https://randomuser.me/api/portraits/men/85.jpg',
+      bg: 'http://shp.qpic.cn/ishow/2735020816/1612773126_84828260_2178_sProdImgNo_2.jpg/0',
     },
-    title: 'Min',
-    navBG: 'http://shp.qpic.cn/ishow/2735040920/1617970550_84828260_22886_sProdImgNo_8.jpg/0',
+    navbarTitle: 'Min',
     drawer: false,
     items: [
       {
@@ -226,11 +225,12 @@ export default {
   computed: mapState({
     userInfo: (state) => state.userModule.userInfo,
   }),
+
   methods: {
     ...mapActions('userModule', ['logout']),
     onScroll(e) {
       if (e.target.scrollTop > 100) {
-        this.scrollBtn = true;
+        this.scrollTotopBtn = true;
       }
     },
     onDrawer() {
@@ -242,7 +242,7 @@ export default {
     },
   },
   components: {
-    foot,
+    Footer,
   },
 };
 </script>
