@@ -24,7 +24,7 @@ func Register(ctx *gin.Context) {
 		ResponeMsg(ctx, http.StatusUnprocessableEntity, "user exists")
 		return
 	}
-	if registerUser.Name == "" {
+	if len(registerUser.Name) == 0 {
 		registerUser.Name = common.RandomString(10)
 	}
 
