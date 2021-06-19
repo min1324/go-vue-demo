@@ -18,6 +18,7 @@ func main() {
 	r := gin.Default()
 	r.Use(middleware.RecoverMiddleware())
 	r.Use(middleware.AuthMiddleware())
+	r.Use(middleware.CorsMiddleWare())
 
 	route.InitRouter(r)
 
