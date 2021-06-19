@@ -14,9 +14,10 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+// CreateToken create a user token
 func CreateToken(u *model.User) (string, error) {
-	expiresAt := time.Now().Add(24 * time.Hour).Unix()
-	claims := &Claims{
+	expiresAt := time.Now().Add(24 * time.Hour * 3).Unix()
+	clains := &Claims{
 		UserId: u.ID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiresAt,
@@ -25,19 +26,20 @@ func CreateToken(u *model.User) (string, error) {
 			Subject:   "user token",
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, clains)
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
 		return "", err
 	}
 	return tokenString, nil
+
 }
 
 func ParseToken(tokenString string) (*jwt.Token, *Claims, error) {
-	claims := &Claims{}
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+	claims := Claims{}
+	token, err := jwt.ParseWithClaims(tokenString, &claims, func(t *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
-	return token, claims, err
+	return token, &claims, err
 
 }

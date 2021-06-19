@@ -19,8 +19,8 @@ func Respone(ctx *gin.Context, httpStatus int, code int, data gin.H, msg string)
 	ctx.JSON(httpStatus, gin.H{"code": code, "data": data, "msg": msg})
 }
 
-func ResponeMsg(ctx *gin.Context, httpStatus int, code int, msg string) {
-	ctx.JSON(httpStatus, gin.H{"code": code, "data": gin.H{}, "msg": msg})
+func ResponeMsg(ctx *gin.Context, httpStatus int, msg string) {
+	ctx.JSON(httpStatus, gin.H{"code": httpStatus, "data": gin.H{}, "msg": msg})
 }
 
 func Success(ctx *gin.Context, data gin.H, msg string) {

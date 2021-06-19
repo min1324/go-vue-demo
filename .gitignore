@@ -1,4 +1,4 @@
 demo
-*.exe
-upload
+go.sum
 frontend/dist
+upload

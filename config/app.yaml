@@ -1,16 +1,12 @@
 server:
-  # server ip
-  ip: 192.168.188.123:9000
-  # upload dir
-  dir: upload 
-  # load dist assets
-  assets: true
+  dns: 127.0.0.1:8080
+  dir: upload
 
-datasource:
+database:
   host: 127.0.0.1
   port: 3306
-  dbname: blog
   user: min
   pass: 123
+  dbname: blog
   charset: utf8mb4
-  loc: Asia/Shanghai
+  local: Asia/Shanghai

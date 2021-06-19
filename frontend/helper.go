@@ -10,9 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func init() {
-}
-
 type fsFunc func(name string) (fs.File, error)
 
 // Open implement fs.FS.
@@ -20,6 +17,10 @@ func (fs fsFunc) Open(name string) (fs.File, error) {
 	return fs(name)
 }
 
+// assets filesystem,
+//
+// use: StaticFS(StaticPrefix, FileSystem(FS, StaticRoot))
+// index.html page with string: IndexHtml
 func FileSystem(assets embed.FS, root string) http.FileSystem {
 	return http.FS(fsFunc(func(name string) (fs.File, error) {
 		file, err := assets.Open(path.Join(root, name))
@@ -31,17 +32,8 @@ func FileSystem(assets embed.FS, root string) http.FileSystem {
 	}))
 }
 
-// Handler static assets handler.
-func Handler() http.Handler {
-	return http.FileServer(FileSystem(FS, StaticRoot))
-}
-
-func Static(prefix string) {
-	http.StripPrefix(prefix, Handler())
-}
-
 // Static returns a middleware handler that serves static files in the given directory.
-func InitGinRouter(r *gin.Engine) *gin.Engine {
+func InitRouter(r *gin.Engine) *gin.Engine {
 	// assets file
 	r.StaticFS(StaticPrefix, FileSystem(FS, StaticRoot))
 

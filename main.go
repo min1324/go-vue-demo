@@ -8,15 +8,18 @@ import (
 )
 
 func main() {
+	// Frist init config,then use config init db.
+	// InitConfig must before InitDB.
 	common.InitConfig()
 	common.InitDB()
 
+	// init router
 	r := gin.Default()
-	r = route.CollectRoute(r)
+	route.InitRouter(r)
 
-	ip := common.GbConfig.GetString("server.ip")
-	if ip != "" {
-		panic(r.Run(ip))
+	addr := common.GbConfig.GetString("server.dns")
+	err := r.Run(addr)
+	if err != nil {
+		panic(err)
 	}
-	r.Run()
 }
