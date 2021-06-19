@@ -17,6 +17,7 @@ func main() {
 	// init router
 	r := gin.Default()
 	r.Use(middleware.RecoverMiddleware())
+	r.Use(middleware.AuthMiddleware())
 
 	route.InitRouter(r)
 
