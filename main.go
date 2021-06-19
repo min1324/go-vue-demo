@@ -2,6 +2,7 @@ package main
 
 import (
 	"demo/common"
+	"demo/middleware"
 	"demo/route"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,8 @@ func main() {
 
 	// init router
 	r := gin.Default()
+	r.Use(middleware.RecoverMiddleware())
+
 	route.InitRouter(r)
 
 	addr := common.GbConfig.GetString("server.dns")
